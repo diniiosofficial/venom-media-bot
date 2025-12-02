@@ -21,9 +21,9 @@ const TARGET_CHANNELS = [
 
 // Caption watermark (shown in channel under every media)
 const CAPTION =
-  "<b>📥 Gameplay Feedback Retrieved</b>\n\n" +
-  "<b>Status:</b> FULL SAFE\n" +
-  "<b>Owner:</b> T.me/VenomDevX 🐉";
+  "<b>📥 Gᴀᴍᴇᴘʟᴀʏ Fᴇᴇᴅʙᴀᴄᴋ Rᴇᴛʀɪᴇᴠᴇᴅ</b>\n\n" +
+  "<b>Sᴛᴀᴛᴜs :</b> Fᴜʟʟ Sᴀғᴇ 🟢\n" +
+  "<b>Dᴍ Tᴏ Bᴜʏ :</b> T.me/VenomDevX 🐉";
 
 // --------------------------------------------------------
 
@@ -115,3 +115,4 @@ module.exports = async (req, res) => {
     return res.status(500).send("Internal Error");
   }
 };
+
