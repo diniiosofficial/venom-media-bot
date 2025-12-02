@@ -1,7 +1,7 @@
 const { Telegraf } = require("telegraf");
 
 /* ======================================================
-   VENOM MEDIA DISPATCHER — CAPTION MERGE EDITION
+   VENOM MEDIA DISPATCHER — CAPTION + FORWARD INFO EDITION
    Author: VenomDevX
    Mode: Admin-only media broadcaster with smart captions
    ====================================================== */
@@ -27,7 +27,7 @@ const BASE_CAPTION =
 
 // --------------------------------------------------------
 
-// escape HTML in user caption so it doesn't break <b> tags, etc.
+// Escape HTML in user caption so it doesn't break <b> tags, etc.
 function escapeHtml(text) {
   if (!text) return "";
   return text
@@ -36,14 +36,55 @@ function escapeHtml(text) {
     .replace(/>/g, "&gt;");
 }
 
-// Build final caption based on whether user sent caption or not
-function buildFinalCaption(userCaption) {
-  if (userCaption && userCaption.trim().length > 0) {
-    const safeUserCaption = escapeHtml(userCaption.trim());
-    return safeUserCaption + "\n\n" + BASE_CAPTION;
-  } else {
-    return BASE_CAPTION;
+// Get "from whom" info for forwarded messages
+function getForwardInfo(msg) {
+  try {
+    if (msg.forward_from) {
+      // Forwarded from a user
+      const u = msg.forward_from;
+      if (u.username) {
+        return `<b>Fʀᴏᴍ :</b> @${escapeHtml(u.username)}`;
+      }
+      const name = [u.first_name, u.last_name].filter(Boolean).join(" ");
+      if (name) return `<b>Fʀᴏᴍ :</b> ${escapeHtml(name)}`;
+    } else if (msg.forward_from_chat) {
+      // Forwarded from a channel / group
+      const ch = msg.forward_from_chat;
+      if (ch.username) {
+        return `<b>Fʀᴏᴍ :</b> @${escapeHtml(ch.username)}`;
+      }
+      if (ch.title) {
+        return `<b>Fʀᴏᴍ :</b> ${escapeHtml(ch.title)}`;
+      }
+    } else if (msg.forward_sender_name) {
+      // Hidden user name
+      return `<b>Fʀᴏᴍ :</b> ${escapeHtml(msg.forward_sender_name)}`;
+    }
+  } catch (e) {
+    console.log("[WARN] getForwardInfo error:", e);
   }
+  return ""; // not forwarded / unknown
+}
+
+// Build final caption based on:
+// - your caption (optional)
+// - forward info (if forwarded)
+// - base VENOM caption
+function buildFinalCaption(userCaption, msg) {
+  const parts = [];
+
+  if (userCaption && userCaption.trim().length > 0) {
+    parts.push(escapeHtml(userCaption.trim()));
+  }
+
+  const forwardInfo = getForwardInfo(msg);
+  if (forwardInfo) {
+    parts.push(forwardInfo);
+  }
+
+  parts.push(BASE_CAPTION);
+
+  return parts.join("\n\n");
 }
 
 const bot = new Telegraf(BOT_TOKEN);
@@ -57,7 +98,8 @@ bot.start(async (ctx) => {
       "<b>Mode:</b> Secure Upload & Channel Distribution\n" +
       "<b>Function:</b> Auto-Publish Photos / Videos / Documents\n\n" +
       "➤ Sᴇɴᴅ ᴍᴇᴅɪᴀ ᴡɪᴛʜᴏᴜᴛ ᴄᴀᴘᴛɪᴏɴ → ᴏɴʟʏ Vᴇɴᴏᴍ ᴄᴀᴘᴛɪᴏɴ.\n" +
-      "➤ Sᴇɴᴅ ᴍᴇᴅɪᴀ ᴡɪᴛʜ ᴄᴀᴘᴛɪᴏɴ → ʏᴏᴜʀ ᴄᴀᴘᴛɪᴏɴ + Vᴇɴᴏᴍ ᴄᴀᴘᴛɪᴏɴ.\n\n" +
+      "➤ Sᴇɴᴅ ᴍᴇᴅɪᴀ ᴡɪᴛʜ ᴄᴀᴘᴛɪᴏɴ → ʏᴏᴜʀ ᴄᴀᴘᴛɪᴏɴ + Vᴇɴᴏᴍ ᴄᴀᴘᴛɪᴏɴ.\n" +
+      "➤ Fᴏʀᴡᴀʀᴅᴇᴅ ᴍᴇᴅɪᴀ → ɪɴᴄʟᴜᴅᴇs <b>Fʀᴏᴍ :</b> sᴏᴜʀᴄᴇ.\n\n" +
       "<b>Note:</b> Only the bot admin can trigger distribution.",
     { parse_mode: "HTML" }
   );
@@ -97,9 +139,8 @@ bot.on("message", async (ctx) => {
   const fromChat = msg.chat.id;
   const messageId = msg.message_id;
 
-  // Grab the caption you sent (if any)
   const userCaption = msg.caption || "";
-  const finalCaption = buildFinalCaption(userCaption);
+  const finalCaption = buildFinalCaption(userCaption, msg);
 
   let successCount = 0;
   let failCount = 0;
@@ -148,7 +189,7 @@ module.exports = async (req, res) => {
     }
     return res
       .status(200)
-      .send("VENOM MEDIA DISPATCHER ACTIVE (Caption Merge Mode)");
+      .send("VENOM MEDIA DISPATCHER ACTIVE (Forward-Aware Caption Mode)");
   } catch (err) {
     console.error("[ERROR] Internal Vercel Handler:", err);
     return res.status(500).send("Internal Error");
