@@ -1,9 +1,9 @@
 const { Telegraf } = require("telegraf");
 
 /* ======================================================
-   VENOM MEDIA DISPATCHER — CAPTION + FORWARD INFO EDITION
+   VENOM MEDIA DISPATCHER — CAPTION + FORWARD + /SEND
    Author: VenomDevX
-   Mode: Admin-only media broadcaster with smart captions
+   Mode: Admin-only media & text broadcaster with smart captions
    ====================================================== */
 
 // ----------------------- CONFIG ------------------------
@@ -25,8 +25,11 @@ const BASE_CAPTION =
   "<b>Sᴛᴀᴛᴜs :</b> Fᴜʟʟ Sᴀғᴇ 🟢\n" +
   "<b>Dᴍ Tᴏ Bᴜʏ :</b> T.me/VenomDevX 🐉";
 
-// --------------------------------------------------------
+// ----------------------- STATE -------------------------
+// After /send, next text from admin will be broadcast to all channels
+let waitingBroadcastText = false;
 
+// --------------------------------------------------------
 // Escape HTML in user caption so it doesn't break <b> tags, etc.
 function escapeHtml(text) {
   if (!text) return "";
@@ -87,20 +90,36 @@ function buildFinalCaption(userCaption, msg) {
   return parts.join("\n\n");
 }
 
+// -------------------- BOT INIT -------------------------
 const bot = new Telegraf(BOT_TOKEN);
 
-// ----------------------- START CMD ----------------------
+// ----------------------- /start ------------------------
 bot.start(async (ctx) => {
   await ctx.reply(
     "<b>🕷 VENOM MEDIA DISPATCHER — ONLINE</b>\n\n" +
-      "Welcome to the automated media distribution system.\n\n" +
+      "Welcome to the automated media & text distribution system.\n\n" +
       "<b>Access Level:</b> Administrator\n" +
       "<b>Mode:</b> Secure Upload & Channel Distribution\n" +
       "<b>Function:</b> Auto-Publish Photos / Videos / Documents\n\n" +
       "➤ Sᴇɴᴅ ᴍᴇᴅɪᴀ ᴡɪᴛʜᴏᴜᴛ ᴄᴀᴘᴛɪᴏɴ → ᴏɴʟʏ Vᴇɴᴏᴍ ᴄᴀᴘᴛɪᴏɴ.\n" +
       "➤ Sᴇɴᴅ ᴍᴇᴅɪᴀ ᴡɪᴛʜ ᴄᴀᴘᴛɪᴏɴ → ʏᴏᴜʀ ᴄᴀᴘᴛɪᴏɴ + Vᴇɴᴏᴍ ᴄᴀᴘᴛɪᴏɴ.\n" +
-      "➤ Fᴏʀᴡᴀʀᴅᴇᴅ ᴍᴇᴅɪᴀ → ɪɴᴄʟᴜᴅᴇs <b>Fʀᴏᴍ :</b> sᴏᴜʀᴄᴇ.\n\n" +
+      "➤ Fᴏʀᴡᴀʀᴅᴇᴅ ᴍᴇᴅɪᴀ → ɪɴᴄʟᴜᴅᴇs <b>Fʀᴏᴍ :</b> sᴏᴜʀᴄᴇ.\n" +
+      "➤ /send → Nᴇxᴛ ᴛᴇxᴛ ʏᴏᴜ sᴇɴᴅ ᴡɪʟʟ ʙᴇ ʙʀᴏᴀᴅᴄᴀsᴛᴇᴅ ᴛᴏ ᴀʟʟ ᴄʜᴀɴɴᴇʟs (1-ᴛɪᴍᴇ).\n\n" +
       "<b>Note:</b> Only the bot admin can trigger distribution.",
+    { parse_mode: "HTML" }
+  );
+});
+
+// ----------------------- /send -------------------------
+// After /send, next plain text (not starting with /) will go to all channels
+bot.command("send", async (ctx) => {
+  if (!ctx.from || ctx.from.id !== ADMIN_ID) return;
+
+  waitingBroadcastText = true;
+  await ctx.reply(
+    "<b>📡 Bʀᴏᴀᴅᴄᴀsᴛ Mᴏᴅᴇ Aᴄᴛɪᴠᴇ</b>\n\n" +
+      "Sᴇɴᴅ ᴛʜᴇ ᴍᴇssᴀɢᴇ (ᴛᴇxᴛ) ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ sᴇɴᴅ ᴛᴏ ᴀʟʟ ᴄʜᴀɴɴᴇʟs.\n" +
+      "➤ Bᴏᴛ ᴡɪʟʟ ᴀᴜᴛᴏ-ᴇxɪᴛ ᴀғᴛᴇʀ 1 ᴍᴇssᴀɢᴇ.",
     { parse_mode: "HTML" }
   );
 });
@@ -109,15 +128,56 @@ bot.start(async (ctx) => {
 bot.on("message", async (ctx) => {
   const msg = ctx.message;
 
-  // 1) Ignore anything that comes FROM the target channels (avoid loops)
+  // 0) Ignore anything that comes FROM the target channels (avoid loops)
   if (TARGET_CHANNELS.includes(msg.chat.id)) return;
 
-  // 2) Only admin is allowed
+  // 1) Only admin is allowed for everything
   if (!msg.from || msg.from.id !== ADMIN_ID) {
     return; // silent ignore for others
   }
 
-  // 3) Check for media
+  // ========== A) HANDLE /send BROADCAST TEXT MODE ==========
+  if (waitingBroadcastText && msg.text && !msg.text.startsWith("/")) {
+    const textToSend = msg.text;
+    let success = 0;
+    let failed = 0;
+
+    for (const channel of TARGET_CHANNELS) {
+      try {
+        await ctx.telegram.sendMessage(channel, textToSend, {
+          parse_mode: "HTML",
+        });
+        success++;
+      } catch (err) {
+        console.error(`[ERROR] Broadcast failed to ${channel}:`, err);
+        failed++;
+      }
+    }
+
+    // auto-exit broadcast mode after first message
+    waitingBroadcastText = false;
+
+    await ctx.reply(
+      `<b>✅ Bʀᴏᴀᴅᴄᴀsᴛ Cᴏᴍᴘʟᴇᴛᴇ</b>\n\n` +
+        `<b>Sᴇɴᴛ ᴛᴏ:</b> ${success} channel(s)\n` +
+        `<b>Fᴀɪʟᴇᴅ:</b> ${failed} channel(s)\n\n` +
+        `<b>Mᴏᴅᴇ:</b> 1-ᴛɪᴍᴇ /send ʙʀᴏᴀᴅᴄᴀsᴛ`,
+      { parse_mode: "HTML" }
+    );
+    return;
+  }
+
+  // If waitingBroadcastText but got another command (like /start, /send), let command handlers handle it
+  if (waitingBroadcastText && msg.text && msg.text.startsWith("/")) {
+    return;
+  }
+
+  // If it's a pure command ( /start /send etc ) and not handled above, ignore here
+  if (msg.text && msg.text.startsWith("/")) {
+    return;
+  }
+
+  // ========== B) NORMAL MEDIA HANDLING (IMAGES / VIDEOS / ETC) ==========
   const hasMedia =
     msg.photo ||
     msg.video ||
@@ -145,7 +205,7 @@ bot.on("message", async (ctx) => {
   let successCount = 0;
   let failCount = 0;
 
-  // 4) Dispatch to all channels using copyMessage (no "Forwarded from" tag)
+  // Dispatch to all channels using copyMessage (no "Forwarded from" tag)
   for (const channel of TARGET_CHANNELS) {
     try {
       const sentMessage = await ctx.telegram.copyMessage(
@@ -170,7 +230,7 @@ bot.on("message", async (ctx) => {
     }
   }
 
-  // 5) Send you a status message
+  // Status message back to you
   let statusText =
     `<b>✅ Dɪsᴘᴀᴛᴄʜ Cᴏᴍᴘʟᴇᴛᴇ</b>\n\n` +
     `<b>Sᴇɴᴛ ᴛᴏ:</b> ${successCount} channel(s)\n` +
@@ -189,7 +249,7 @@ module.exports = async (req, res) => {
     }
     return res
       .status(200)
-      .send("VENOM MEDIA DISPATCHER ACTIVE (Forward-Aware Caption Mode)");
+      .send("VENOM MEDIA DISPATCHER ACTIVE (Forward + /send Mode)");
   } catch (err) {
     console.error("[ERROR] Internal Vercel Handler:", err);
     return res.status(500).send("Internal Error");
