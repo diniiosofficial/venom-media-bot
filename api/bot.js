@@ -104,7 +104,7 @@ bot.start(async (ctx) => {
       "➤ Sᴇɴᴅ ᴍᴇᴅɪᴀ ᴡɪᴛʜᴏᴜᴛ ᴄᴀᴘᴛɪᴏɴ → ᴏɴʟʏ Vᴇɴᴏᴍ ᴄᴀᴘᴛɪᴏɴ.\n" +
       "➤ Sᴇɴᴅ ᴍᴇᴅɪᴀ ᴡɪᴛʜ ᴄᴀᴘᴛɪᴏɴ → ʏᴏᴜʀ ᴄᴀᴘᴛɪᴏɴ + Vᴇɴᴏᴍ ᴄᴀᴘᴛɪᴏɴ.\n" +
       "➤ Fᴏʀᴡᴀʀᴅᴇᴅ ᴍᴇᴅɪᴀ → ɪɴᴄʟᴜᴅᴇs <b>Fʀᴏᴍ :</b> sᴏᴜʀᴄᴇ.\n" +
-      "➤ /send → Nᴇxᴛ ᴛᴇxᴛ ʏᴏᴜ sᴇɴᴅ ᴡɪʟʟ ʙᴇ ʙʀᴏᴀᴅᴄᴀsᴛᴇᴅ ᴛᴏ ᴀʟʟ ᴄʜᴀɴɴᴇʟs (1-ᴛɪᴍᴇ).\n\n" +
+      "➤ /broadcast → Nᴇxᴛ ᴛᴇxᴛ ʏᴏᴜ sᴇɴᴅ ᴡɪʟʟ ʙᴇ ʙʀᴏᴀᴅᴄᴀsᴛᴇᴅ ᴛᴏ ᴀʟʟ ᴄʜᴀɴɴᴇʟs (1-ᴛɪᴍᴇ).\n\n" +
       "<b>Note:</b> Only the bot admin can trigger distribution.",
     { parse_mode: "HTML" }
   );
@@ -255,4 +255,5 @@ module.exports = async (req, res) => {
     return res.status(500).send("Internal Error");
   }
 };
+
 
