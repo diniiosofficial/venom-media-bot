@@ -17,7 +17,8 @@ const TARGET_CHANNELS = [
   -1002762374328, // VENOM LOADER
   -1002683334976, // VENOM FEEDBACK
   -1002558925715, // VENOM FREE MODZ
-  -1001858673142  // LEO&KNIGHT CHEAT
+  -1001858673142, // LEO&KNIGHT CHEAT
+  -1003203628581  // 𝐕𝐄𝐍𝐎𝐌 𝐒𝐄𝐑𝐕𝐄𝐑™
 ];
 
 // Base VENOM caption (HTML formatted)
@@ -256,6 +257,7 @@ module.exports = async (req, res) => {
     return res.status(500).send("Internal Error");
   }
 };
+
 
 
 
