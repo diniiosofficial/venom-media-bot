@@ -7,7 +7,7 @@ const { Telegraf } = require("telegraf");
    ====================================================== */
 
 // ----------------------- CONFIG ------------------------
-const BOT_TOKEN = "8208213604:AAGzmXe1k2Pl8N3GXCPGg5eK1UaHpJNg4-0";
+const BOT_TOKEN = "8559377355:AAFyjhBcQPBfHvPp7iHvTpvAEbu2NJpq5rw";
 
 // Your Telegram User ID (only you are allowed)
 const ADMIN_ID = 5707956654;
@@ -258,6 +258,7 @@ module.exports = async (req, res) => {
     return res.status(500).send("Internal Error");
   }
 };
+
 
 
 
