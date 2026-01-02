@@ -28,11 +28,10 @@ const BASE_CAPTION =
   "<b>Dᴍ Tᴏ Bᴜʏ :</b> T.me/VenomDevX 🐉";
 
 // ----------------------- STATE -------------------------
-// After /send, next text from admin will be broadcast to all channels
 let waitingBroadcastText = false;
 
 // --------------------------------------------------------
-// Escape HTML in user caption so it doesn't break <b> tags, etc.
+// Escape HTML in user caption so it doesn't break <b> tags
 function escapeHtml(text) {
   if (!text) return "";
   return text
@@ -41,40 +40,42 @@ function escapeHtml(text) {
     .replace(/>/g, "&gt;");
 }
 
-// Get "from whom" info for forwarded messages
+// --------------------------------------------------------
+// ✅ UPDATED: Always show REAL NAME, never @username
 function getForwardInfo(msg) {
   try {
+    // ===== FORWARDED FROM USER =====
     if (msg.forward_from) {
-      // Forwarded from a user
       const u = msg.forward_from;
-      if (u.username) {
-        return `<b>Fʀᴏᴍ :</b> @${escapeHtml(u.username)}`;
-      }
+
       const name = [u.first_name, u.last_name].filter(Boolean).join(" ");
-      if (name) return `<b>Fʀᴏᴍ :</b> ${escapeHtml(name)}`;
-    } else if (msg.forward_from_chat) {
-      // Forwarded from a channel / group
-      const ch = msg.forward_from_chat;
-      if (ch.username) {
-        return `<b>Fʀᴏᴍ :</b> @${escapeHtml(ch.username)}`;
+      if (name) {
+        return `<b>Fʀᴏᴍ :</b> ${escapeHtml(name)}`;
       }
+    }
+
+    // ===== FORWARDED FROM CHANNEL / GROUP =====
+    if (msg.forward_from_chat) {
+      const ch = msg.forward_from_chat;
+
       if (ch.title) {
         return `<b>Fʀᴏᴍ :</b> ${escapeHtml(ch.title)}`;
       }
-    } else if (msg.forward_sender_name) {
-      // Hidden user name
+    }
+
+    // ===== HIDDEN FORWARD =====
+    if (msg.forward_sender_name) {
       return `<b>Fʀᴏᴍ :</b> ${escapeHtml(msg.forward_sender_name)}`;
     }
   } catch (e) {
     console.log("[WARN] getForwardInfo error:", e);
   }
-  return ""; // not forwarded / unknown
+
+  return "";
 }
 
-// Build final caption based on:
-// - your caption (optional)
-// - forward info (if forwarded)
-// - base VENOM caption
+// --------------------------------------------------------
+// Build final caption
 function buildFinalCaption(userCaption, msg) {
   const parts = [];
 
@@ -88,7 +89,6 @@ function buildFinalCaption(userCaption, msg) {
   }
 
   parts.push(BASE_CAPTION);
-
   return parts.join("\n\n");
 }
 
@@ -99,29 +99,25 @@ const bot = new Telegraf(BOT_TOKEN);
 bot.start(async (ctx) => {
   await ctx.reply(
     "<b>🕷 VENOM MEDIA DISPATCHER — ONLINE</b>\n\n" +
-      "Welcome to the automated media & text distribution system.\n\n" +
       "<b>Access Level:</b> Administrator\n" +
-      "<b>Mode:</b> Secure Upload & Channel Distribution\n" +
-      "<b>Function:</b> Auto-Publish Photos / Videos / Documents\n\n" +
-      "➤ Sᴇɴᴅ ᴍᴇᴅɪᴀ ᴡɪᴛʜᴏᴜᴛ ᴄᴀᴘᴛɪᴏɴ → ᴏɴʟʏ Vᴇɴᴏᴍ ᴄᴀᴘᴛɪᴏɴ.\n" +
-      "➤ Sᴇɴᴅ ᴍᴇᴅɪᴀ ᴡɪᴛʜ ᴄᴀᴘᴛɪᴏɴ → ʏᴏᴜʀ ᴄᴀᴘᴛɪᴏɴ + Vᴇɴᴏᴍ ᴄᴀᴘᴛɪᴏɴ.\n" +
-      "➤ Fᴏʀᴡᴀʀᴅᴇᴅ ᴍᴇᴅɪᴀ → ɪɴᴄʟᴜᴅᴇs <b>Fʀᴏᴍ :</b> sᴏᴜʀᴄᴇ.\n" +
-      "➤ /broadcast → Nᴇxᴛ ᴛᴇxᴛ ʏᴏᴜ sᴇɴᴅ ᴡɪʟʟ ʙᴇ ʙʀᴏᴀᴅᴄᴀsᴛᴇᴅ ᴛᴏ ᴀʟʟ ᴄʜᴀɴɴᴇʟs (1-ᴛɪᴍᴇ).\n\n" +
-      "<b>Note:</b> Only the bot admin can trigger distribution.",
+      "<b>Mode:</b> Secure Upload & Channel Distribution\n\n" +
+      "➤ Media without caption → Only VENOM caption\n" +
+      "➤ Media with caption → Your caption + VENOM caption\n" +
+      "➤ Forwarded media → Shows REAL NAME only\n" +
+      "➤ /broadcast → One-time text broadcast\n\n" +
+      "<b>Note:</b> Admin only",
     { parse_mode: "HTML" }
   );
 });
 
-// ----------------------- /send -------------------------
-// After /send, next plain text (not starting with /) will go to all channels
+// ----------------------- /broadcast --------------------
 bot.command("broadcast", async (ctx) => {
   if (!ctx.from || ctx.from.id !== ADMIN_ID) return;
 
   waitingBroadcastText = true;
   await ctx.reply(
     "<b>📡 Bʀᴏᴀᴅᴄᴀsᴛ Mᴏᴅᴇ Aᴄᴛɪᴠᴇ</b>\n\n" +
-      "Sᴇɴᴅ ᴛʜᴇ ᴍᴇssᴀɢᴇ (ᴛᴇxᴛ) ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ sᴇɴᴅ ᴛᴏ ᴀʟʟ ᴄʜᴀɴɴᴇʟs.\n" +
-      "➤ Bᴏᴛ ᴡɪʟʟ ᴀᴜᴛᴏ-ᴇxɪᴛ ᴀғᴛᴇʀ 1 ᴍᴇssᴀɢᴇ.",
+      "Send the text to broadcast (1-time)",
     { parse_mode: "HTML" }
   );
 });
@@ -130,116 +126,57 @@ bot.command("broadcast", async (ctx) => {
 bot.on("message", async (ctx) => {
   const msg = ctx.message;
 
-  // 0) Ignore anything that comes FROM the target channels (avoid loops)
   if (TARGET_CHANNELS.includes(msg.chat.id)) return;
+  if (!msg.from || msg.from.id !== ADMIN_ID) return;
 
-  // 1) Only admin is allowed for everything
-  if (!msg.from || msg.from.id !== ADMIN_ID) {
-    return; // silent ignore for others
-  }
-
-  // ========== A) HANDLE /send BROADCAST TEXT MODE ==========
+  // ===== BROADCAST TEXT =====
   if (waitingBroadcastText && msg.text && !msg.text.startsWith("/")) {
-    const textToSend = msg.text;
-    let success = 0;
-    let failed = 0;
+    waitingBroadcastText = false;
 
-    for (const channel of TARGET_CHANNELS) {
+    let ok = 0, fail = 0;
+    for (const ch of TARGET_CHANNELS) {
       try {
-        await ctx.telegram.sendMessage(channel, textToSend, {
-          parse_mode: "HTML",
-        });
-        success++;
-      } catch (err) {
-        console.error(`[ERROR] Broadcast failed to ${channel}:`, err);
-        failed++;
+        await ctx.telegram.sendMessage(ch, msg.text, { parse_mode: "HTML" });
+        ok++;
+      } catch {
+        fail++;
       }
     }
 
-    // auto-exit broadcast mode after first message
-    waitingBroadcastText = false;
-
-    await ctx.reply(
-      `<b>✅ Bʀᴏᴀᴅᴄᴀsᴛ Cᴏᴍᴘʟᴇᴛᴇ</b>\n\n` +
-        `<b>Sᴇɴᴛ ᴛᴏ:</b> ${success} channel(s)\n` +
-        `<b>Fᴀɪʟᴇᴅ:</b> ${failed} channel(s)\n\n` +
-        `<b>Mᴏᴅᴇ:</b> 1-ᴛɪᴍᴇ /send ʙʀᴏᴀᴅᴄᴀsᴛ`,
+    return ctx.reply(
+      `<b>✅ Broadcast Done</b>\n\nSent: ${ok}\nFailed: ${fail}`,
       { parse_mode: "HTML" }
     );
-    return;
   }
 
-  // If waitingBroadcastText but got another command (like /start, /send), let command handlers handle it
-  if (waitingBroadcastText && msg.text && msg.text.startsWith("/")) {
-    return;
-  }
+  if (msg.text && msg.text.startsWith("/")) return;
 
-  // If it's a pure command ( /start /send etc ) and not handled above, ignore here
-  if (msg.text && msg.text.startsWith("/")) {
-    return;
-  }
-
-  // ========== B) NORMAL MEDIA HANDLING (IMAGES / VIDEOS / ETC) ==========
+  // ===== MEDIA HANDLING =====
   const hasMedia =
-    msg.photo ||
-    msg.video ||
-    msg.document ||
-    msg.animation ||
-    msg.video_note ||
-    msg.voice ||
-    msg.audio;
+    msg.photo || msg.video || msg.document || msg.animation ||
+    msg.video_note || msg.voice || msg.audio;
 
-  if (!hasMedia) {
-    await ctx.reply(
-      "⚠️ Nᴏ ᴍᴇᴅɪᴀ ᴅᴇᴛᴇᴄᴛᴇᴅ.\n" +
-        "Pʟᴇᴀsᴇ sᴇɴᴅ ᴀ ᴘʜᴏᴛᴏ / ᴠɪᴅᴇᴏ / ᴅᴏᴄᴜᴍᴇɴᴛ ᴛᴏ ᴅɪsᴘᴀᴛᴄʜ.",
-      { parse_mode: "HTML" }
-    );
-    return;
-  }
+  if (!hasMedia) return;
 
-  const fromChat = msg.chat.id;
-  const messageId = msg.message_id;
+  const caption = buildFinalCaption(msg.caption || "", msg);
 
-  const userCaption = msg.caption || "";
-  const finalCaption = buildFinalCaption(userCaption, msg);
-
-  let successCount = 0;
-  let failCount = 0;
-
-  // Dispatch to all channels using copyMessage (no "Forwarded from" tag)
-  for (const channel of TARGET_CHANNELS) {
+  let sent = 0, failed = 0;
+  for (const ch of TARGET_CHANNELS) {
     try {
-      const sentMessage = await ctx.telegram.copyMessage(
-        channel,
-        fromChat,
-        messageId,
-        {
-          caption: finalCaption,
-          parse_mode: "HTML",
-        }
-      );
-
-      console.log(
-        `[VENOM] Media sent to channel: ${channel} (msg_id: ${
-          sentMessage?.message_id
-        })`
-      );
-      successCount++;
-    } catch (err) {
-      console.error(`[ERROR] Failed to dispatch to ${channel}:`, err);
-      failCount++;
+      await ctx.telegram.copyMessage(ch, msg.chat.id, msg.message_id, {
+        caption,
+        parse_mode: "HTML",
+      });
+      sent++;
+    } catch {
+      failed++;
     }
   }
 
-  // Status message back to you
-  let statusText =
-    `<b>✅ Dɪsᴘᴀᴛᴄʜ Cᴏᴍᴘʟᴇᴛᴇ</b>\n\n` +
-    `<b>Sᴇɴᴛ ᴛᴏ:</b> ${successCount} channel(s)\n` +
-    `<b>Fᴀɪʟᴇᴅ:</b> ${failCount} channel(s)\n\n` +
-    `<b>Eɴɢɪɴᴇ:</b> VENOM SERVER 🐉`;
-
-  await ctx.reply(statusText, { parse_mode: "HTML" });
+  await ctx.reply(
+    `<b>✅ Dispatch Complete</b>\n\nSent: ${sent}\nFailed: ${failed}`,
+    { parse_mode: "HTML" }
+  );
 });
 
 // -------------------- VERCEL HANDLER --------------------
@@ -249,14 +186,14 @@ module.exports = async (req, res) => {
       await bot.handleUpdate(req.body);
       return res.status(200).json({ ok: true });
     }
-    return res
-      .status(200)
-      .send("VENOM MEDIA DISPATCHER ACTIVE (Forward + /send Mode)");
-  } catch (err) {
-    console.error("[ERROR] Internal Vercel Handler:", err);
-    return res.status(500).send("Internal Error");
+    res.status(200).send("VENOM MEDIA DISPATCHER ACTIVE");
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("Internal Error");
   }
 };
+
+
 
 
 
