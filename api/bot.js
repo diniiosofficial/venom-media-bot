@@ -1,15 +1,15 @@
 const { Telegraf } = require("telegraf");
 
 /* ======================================================
-   VENOM MEDIA DISPATCHER — CAPTION + FORWARD + /SEND
+   VENOM MEDIA DISPATCHER — MULTI-LANGUAGE MIXED CAPTIONS
    Author: VenomDevX
-   Mode: Admin-only media & text broadcaster with smart captions
+   Mode: English | Hinglish | Tanglish | Dakhni | Mix
    ====================================================== */
 
 // ----------------------- CONFIG ------------------------
 const BOT_TOKEN = "8559377355:AAFyjhBcQPBfHvPp7iHvTpvAEbu2NJpq5rw";
 
-// Your Telegram User ID (only you are allowed)
+// Your Telegram User ID
 const ADMIN_ID = 5707956654;
 
 // Target Channels
@@ -21,74 +21,289 @@ const TARGET_CHANNELS = [
   -1003203628581  // 𝐕𝐄𝐍𝐎𝐌 𝐒𝐄𝐑𝐕𝐄𝐑™
 ];
 
-// Base VENOM caption (HTML formatted)
-const BASE_CAPTION =
-  "<b>📥 Gᴀᴍᴇᴘʟᴀʏ Fᴇᴇᴅʙᴀᴄᴋ Rᴇᴛʀɪᴇᴠᴇᴅ</b>\n\n" +
-  "<b>Sᴛᴀᴛᴜs :</b> Fᴜʟʟ Sᴀғᴇ 🟢\n" +
-  "<b>Dᴍ Tᴏ Bᴜʏ :</b> T.me/VenomDevX 🐉";
+// ----------------------- ENGLISH (PURE) ------------------------
+const ENGLISH = [
+  "Been using 2 months, still safe ✅\n@VenomDevX",
+  
+  "15 kills first game 🔥\nThanks @VenomDevX",
+  
+  "0.8 to 4.5 KD in 1 month 🚀\nDM @VenomDevX",
+  
+  "No ban since 3 months 🐉\n@VenomDevX legit",
+  
+  "Smooth aimbot, no recoil 🎯\nHit @VenomDevX",
+  
+  "Worth every penny 💰\n@VenomDevX",
+  
+  "My duo thinks I'm pro now 🤫\n@VenomDevX",
+  
+  "Free cheats = ban in 24hrs\nVenom = safe 💪\n@VenomDevX",
+  
+  "20 bomb dropped 💣\n@VenomDevX",
+  
+  "Best decision ever ✅\n@VenomDevX"
+];
+
+// ----------------------- HINGLISH (HINDI + ENGLISH) ------------------------
+const HINGLISH = [
+  "Bhai solid kaam kar raha 🔥\n@VenomDevX",
+  
+  "10 match khele, 10 MVP 🏆\nThanks @VenomDevX",
+  
+  "Pehle dar lagta tha ab maza aa raha 😎\n@VenomDevX",
+  
+  "Dosto ne pucha kese pro hua?\nBola @VenomDevX ne kar diya 🤫",
+  
+  "Free wale try kare the, ban ho gaya\n@VenomDevX se 2 mahine safe ✅",
+  
+  "Kal 18 kills, sab bola hacker\nMaine kaha haan proud hu 😂\n@VenomDevX",
+  
+  "Setup in 2 minutes, kaam shuru ⚡\n@VenomDevX bhai",
+  
+  "Ghar walo ko pata nahi mai hacker hu 🤫\n@VenomDevX",
+  
+  "Streamer ki 15-0 pitti kar di 😂\n@VenomDevX OP",
+  
+  "Jab se yeh use kiya, game badal gaya 🔥\n@VenomDevX",
+  
+  "Ek baar try kar, phir pachtayega 🤷‍♂️\n@VenomDevX",
+  
+  "2 saal bronze tha, 1 hafte mein diamond 🚀\n@VenomDevX",
+  
+  "Baki sab timepass, yeh asli hai 💯\n@VenomDevX",
+  
+  "Package le liya bhai, maza aa gaya 😍\n@VenomDevX"
+];
+
+// ----------------------- TANGLISH (TAMIL + ENGLISH) ------------------------
+const TANGLISH = [
+  "Sema level da 🔥\n@VenomDevX thaan king 👑",
+  
+  "15 kills first game la 🎯\nThanks @VenomDevX mapla",
+  
+  "Namba pro uh 😎\n@VenomDevX valiya",
+  
+  "En duo ku theriyaadhu na hack uh 🤫\n@VenomDevX dhaan",
+  
+  "Free try pannen, ban uh\nVenom la 2 months safe uh 💪\n@VenomDevX",
+  
+  "Aimbot semma smooth uh 🧈\n@VenomDevX",
+  
+  "Nerla iruntha silver uh\nIppa diamond uh 🚀\n@VenomDevX thanks",
+  
+  "Enemies crying in chat 😭\n@VenomDevX OP",
+  
+  "Config worked first try uh 🔧\n@VenomDevX",
+  
+  "Low end phone la lag eh illa 📱\n@VenomDevX recommended",
+  
+  "Vera level da ivaru 🔥\n@VenomDevX thaan maamaan",
+  
+  "Oru vaati try pannu, aprom theriyum 💯\n@VenomDevX",
+  
+  "Main ID safe uh 2 months uh 🛡️\n@VenomDevX",
+  
+  "Paid uh worth uh da 💰\n@VenomDevX",
+  
+  "Nambikkai vai, trust uh 🤝\n@VenomDevX"
+];
+
+// ----------------------- DAKHNI/URDU MIX ------------------------
+const DAKHNI = [
+  "Yaar kamaal kar diya 🔥\n@VenomDevX bhai",
+  
+  "15 kills first match mein 🎯\nShukriya @VenomDevX",
+  
+  "Pehle dar lagta tha, ab maza aa raha hai 😎\n@VenomDevX",
+  
+  "Dosto ne pucha kaise pro hua?\nKaha @VenomDevX ne kar diya 🤫",
+  
+  "Free wale try kiye the, ban ho gaya\nVenom se 2 mahine safe hoon ✅\n@VenomDevX",
+  
+  "Kal 18 kills, sab bola hacker\nMain kaha haan proud hoon 😂\n@VenomDevX",
+  
+  "Setup 2 minute mein, kaam shuru ⚡\n@VenomDevX bhai",
+  
+  "Ghar walon ko nahi pata main hacker hoon 🤫\n@VenomDevX",
+  
+  "Streamer ki 15-0 pitti kar di 😂\n@VenomDevX OP",
+  
+  "Jab se yeh use kiya, game badal gaya 🔥\n@VenomDevX",
+  
+  "Ek baar try kar ke dekh, pachtayega nahi 💯\n@VenomDevX",
+  
+  "2 saal bronze tha, 1 hafte mein diamond 🚀\n@VenomDevX",
+  
+  "Bakiyan timepass, yeh asli hai 💯\n@VenomDevX"
+];
+
+// ----------------------- MANGALISH (MALAYALAM + ENGLISH) ------------------------
+const MANGALISH = [
+  "Sugam ayittundu 🔥\n@VenomDevX",
+  
+  "15 kills first game il 🎯\nThanks @VenomDevX",
+  
+  "En friends think I'm pro now 😎\n@VenomDevX",
+  
+  "Free cheats try cheythu, ban ayi\nVenom 2 months safe 💪\n@VenomDevX",
+  
+  "Aimbot smooth ayittundu 🧈\n@VenomDevX",
+  
+  "Enemies crying in chat 😭\n@VenomDevX OP",
+  
+  "Config first try il work ayi 🔧\n@VenomDevX",
+  
+  "Low end phone il lag illa 📱\n@VenomDevX recommended",
+  
+  "Vere level annu 🔥\n@VenomDevX",
+  
+  "Onnu try cheyy, pinne theriyum 💯\n@VenomDevX"
+];
+
+// ----------------------- TELUGLISH (TELUGU + ENGLISH) ------------------------
+const TELUGLISH = [
+  "Super ga undi 🔥\n@VenomDevX",
+  
+  "15 kills first game lo 🎯\nThanks @VenomDevX",
+  
+  "Na friends think I'm pro now 😎\n@VenomDevX",
+  
+  "Free cheats try chesa, ban aindi\nVenom 2 months safe 💪\n@VenomDevX",
+  
+  "Aimbot smooth ga undi 🧈\n@VenomDevX",
+  
+  "Enemies crying in chat 😭\n@VenomDevX OP",
+  
+  "Config first try lo work aindi 🔧\n@VenomDevX",
+  
+  "Low end phone lo lag ledu 📱\n@VenomDevX recommended",
+  
+  "Vere level 🔥\n@VenomDevX",
+  
+  "Okasari try chey, tarvata thelustadi 💯\n@VenomDevX"
+];
+
+// ----------------------- ULTRA SHORT (ALL LANGUAGES MIX) ------------------------
+const ULTRA_SHORT = [
+  "OP AF 🔥 @VenomDevX",
+  "Legit seller ✅ @VenomDevX",
+  "Safe for main 🛡️ @VenomDevX",
+  "Best in game 🐉 @VenomDevX",
+  "No ban since dec 🗓️ @VenomDevX",
+  "Aimbot smooth 🧈 @VenomDevX",
+  "Hit reg crazy 🎯 @VenomDevX",
+  "Worth it 💰 @VenomDevX",
+  "Trusted 🤝 @VenomDevX",
+  "Game changer 🔥 @VenomDevX",
+  "Villain arc 😈 @VenomDevX",
+  "EZ wins 🏆 @VenomDevX",
+  "Pro ban gaya 😎 @VenomDevX",
+  "No skill needed 🎮 @VenomDevX",
+  "Domination mode 💀 @VenomDevX",
+  "Sema level 🔥 @VenomDevX",
+  "Vera level 🔥 @VenomDevX",
+  "Super undi 🔥 @VenomDevX",
+  "Kamaal hai 🔥 @VenomDevX",
+  "Solid hai 🔥 @VenomDevX",
+  "Dhansu 🔥 @VenomDevX",
+  "Rocks 🔥 @VenomDevX"
+];
+
+// ----------------------- COMBO (ALL TOGETHER) ------------------------
+const ALL_CAPTIONS = [
+  ...ENGLISH,
+  ...HINGLISH,
+  ...TANGLISH,
+  ...DAKHNI,
+  ...MANGALISH,
+  ...TELUGLISH,
+  ...ULTRA_SHORT
+];
+
+// Shuffle array to mix them well
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// Shuffle captions at start
+const SHUFFLED_CAPTIONS = shuffleArray([...ALL_CAPTIONS]);
 
 // ----------------------- STATE -------------------------
 let waitingBroadcastText = false;
 
-// --------------------------------------------------------
-// Escape HTML in user caption so it doesn't break <b> tags
+// ----------------------- HELPER FUNCTIONS -------------
 function escapeHtml(text) {
   if (!text) return "";
   return text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+    .replace(/>/g, "&gt;")
+    .replace(/\n/g, "<br/>");
 }
 
-// --------------------------------------------------------
-// ✅ UPDATED: Always show REAL NAME, never @username
+// Get random caption from MIXED pool
+function getRandomCaption() {
+  const randomIndex = Math.floor(Math.random() * SHUFFLED_CAPTIONS.length);
+  return SHUFFLED_CAPTIONS[randomIndex];
+}
+
+// Get language style for preview
+function getCaptionStyle(caption) {
+  if (TANGLISH.includes(caption)) return "🎯 Tanglish";
+  if (HINGLISH.includes(caption)) return "🇮🇳 Hinglish";
+  if (DAKHNI.includes(caption)) return "✨ Dakhni";
+  if (MANGALISH.includes(caption)) return "🥥 Manglish";
+  if (TELUGLISH.includes(caption)) return "🔥 Teluglish";
+  if (ULTRA_SHORT.includes(caption)) return "⚡ Ultra Short";
+  return "🇬🇧 English";
+}
+
+// Get forward info
 function getForwardInfo(msg) {
   try {
-    // ===== FORWARDED FROM USER =====
     if (msg.forward_from) {
       const u = msg.forward_from;
-
       const name = [u.first_name, u.last_name].filter(Boolean).join(" ");
       if (name) {
-        return `<b>Fʀᴏᴍ :</b> ${escapeHtml(name)}`;
+        return `<b>📨 via</b> ${escapeHtml(name)}`;
       }
     }
-
-    // ===== FORWARDED FROM CHANNEL / GROUP =====
+    
     if (msg.forward_from_chat) {
       const ch = msg.forward_from_chat;
-
       if (ch.title) {
-        return `<b>Fʀᴏᴍ :</b> ${escapeHtml(ch.title)}`;
+        return `<b>📨 via</b> ${escapeHtml(ch.title)}`;
       }
     }
-
-    // ===== HIDDEN FORWARD =====
+    
     if (msg.forward_sender_name) {
-      return `<b>Fʀᴏᴍ :</b> ${escapeHtml(msg.forward_sender_name)}`;
+      return `<b>📨 via</b> ${escapeHtml(msg.forward_sender_name)}`;
     }
   } catch (e) {
     console.log("[WARN] getForwardInfo error:", e);
   }
-
   return "";
 }
 
-// --------------------------------------------------------
 // Build final caption
 function buildFinalCaption(userCaption, msg) {
   const parts = [];
-
+  
   if (userCaption && userCaption.trim().length > 0) {
     parts.push(escapeHtml(userCaption.trim()));
+  } else {
+    parts.push(getRandomCaption());
   }
-
+  
   const forwardInfo = getForwardInfo(msg);
   if (forwardInfo) {
     parts.push(forwardInfo);
   }
-
-  parts.push(BASE_CAPTION);
+  
   return parts.join("\n\n");
 }
 
@@ -97,15 +312,67 @@ const bot = new Telegraf(BOT_TOKEN);
 
 // ----------------------- /start ------------------------
 bot.start(async (ctx) => {
+  const totalStyles = 7; // English, Hinglish, Tanglish, Dakhni, Manglish, Teluglish, Ultra Short
+  
   await ctx.reply(
-    "<b>🕷 VENOM MEDIA DISPATCHER — ONLINE</b>\n\n" +
-      "<b>Access Level:</b> Administrator\n" +
-      "<b>Mode:</b> Secure Upload & Channel Distribution\n\n" +
-      "➤ Media without caption → Only VENOM caption\n" +
-      "➤ Media with caption → Your caption + VENOM caption\n" +
-      "➤ Forwarded media → Shows REAL NAME only\n" +
-      "➤ /broadcast → One-time text broadcast\n\n" +
-      "<b>Note:</b> Admin only",
+    "🌍 <b>VENOM — MULTI-LANGUAGE MIXED DISPATCHER</b>\n\n" +
+    "<b>✨ SUPPORTS:</b>\n" +
+    "🇬🇧 English\n" +
+    "🇮🇳 Hinglish (Hindi+English)\n" +
+    "🎯 Tanglish (Tamil+English)\n" +
+    "✨ Dakhni (Urdu+English)\n" +
+    "🥥 Manglish (Malayalam+English)\n" +
+    "🔥 Teluglish (Telugu+English)\n" +
+    "⚡ Ultra Short (All languages)\n" +
+    "🌍 Pan India Mix\n\n" +
+    "<b>📸 HOW IT WORKS:</b>\n" +
+    "1️⃣ Upload screenshot\n" +
+    "2️⃣ Bot adds RANDOM language style\n" +
+    "3️⃣ Auto-shares to ALL channels\n\n" +
+    "<b>Commands:</b>\n" +
+    "📤 /broadcast - Text to all channels\n" +
+    "📊 /stats - Show caption stats\n" +
+    "🔄 /shuffle - Reshuffle captions\n\n" +
+    `<b>Total Captions:</b> ${ALL_CAPTIONS.length}\n` +
+    `<b>Languages:</b> ${totalStyles}\n` +
+    `<b>Channels:</b> ${TARGET_CHANNELS.length}\n\n` +
+    "<b>Admin Only</b> - India ka apna bot! 🚀",
+    { parse_mode: "HTML" }
+  );
+});
+
+// ----------------------- /stats --------------------
+bot.command("stats", async (ctx) => {
+  if (!ctx.from || ctx.from.id !== ADMIN_ID) return;
+  
+  await ctx.reply(
+    `<b>📊 VENOM BOT STATS</b>\n\n` +
+    `<b>Total Captions:</b> ${ALL_CAPTIONS.length}\n` +
+    `<b>Shuffled Pool:</b> ${SHUFFLED_CAPTIONS.length}\n\n` +
+    `<b>🌏 LANGUAGE BREAKDOWN:</b>\n` +
+    `🇬🇧 English: ${ENGLISH.length}\n` +
+    `🇮🇳 Hinglish: ${HINGLISH.length}\n` +
+    `🎯 Tanglish: ${TANGLISH.length}\n` +
+    `✨ Dakhni: ${DAKHNI.length}\n` +
+    `🥥 Manglish: ${MANGALISH.length}\n` +
+    `🔥 Teluglish: ${TELUGLISH.length}\n` +
+    `⚡ Ultra Short: ${ULTRA_SHORT.length}\n` +
+    `<b>Channels:</b> ${TARGET_CHANNELS.length}`,
+    { parse_mode: "HTML" }
+  );
+});
+
+// ----------------------- /shuffle --------------------
+bot.command("shuffle", async (ctx) => {
+  if (!ctx.from || ctx.from.id !== ADMIN_ID) return;
+  
+  // Reshuffle captions
+  SHUFFLED_CAPTIONS.length = 0;
+  SHUFFLED_CAPTIONS.push(...shuffleArray([...ALL_CAPTIONS]));
+  
+  await ctx.reply(
+    `🔄 <b>Captions Reshuffled!</b>\n\n` +
+    `New pool ready with ${SHUFFLED_CAPTIONS.length} mixed captions!`,
     { parse_mode: "HTML" }
   );
 });
@@ -113,11 +380,11 @@ bot.start(async (ctx) => {
 // ----------------------- /broadcast --------------------
 bot.command("broadcast", async (ctx) => {
   if (!ctx.from || ctx.from.id !== ADMIN_ID) return;
-
+  
   waitingBroadcastText = true;
   await ctx.reply(
-    "<b>📡 Bʀᴏᴀᴅᴄᴀsᴛ Mᴏᴅᴇ Aᴄᴛɪᴠᴇ</b>\n\n" +
-      "Send the text to broadcast (1-time)",
+    "<b>📡 Broadcast Mode Active</b>\n\n" +
+    "Send text to broadcast to ALL channels",
     { parse_mode: "HTML" }
   );
 });
@@ -125,42 +392,53 @@ bot.command("broadcast", async (ctx) => {
 // --------------------- MAIN HANDLER ---------------------
 bot.on("message", async (ctx) => {
   const msg = ctx.message;
-
+  
   if (TARGET_CHANNELS.includes(msg.chat.id)) return;
   if (!msg.from || msg.from.id !== ADMIN_ID) return;
-
-  // ===== BROADCAST TEXT =====
+  
+  // Broadcast text
   if (waitingBroadcastText && msg.text && !msg.text.startsWith("/")) {
     waitingBroadcastText = false;
-
+    
     let ok = 0, fail = 0;
     for (const ch of TARGET_CHANNELS) {
       try {
         await ctx.telegram.sendMessage(ch, msg.text, { parse_mode: "HTML" });
         ok++;
-      } catch {
+      } catch (error) {
+        console.error(`Broadcast failed to ${ch}:`, error);
         fail++;
       }
     }
-
+    
     return ctx.reply(
       `<b>✅ Broadcast Done</b>\n\nSent: ${ok}\nFailed: ${fail}`,
       { parse_mode: "HTML" }
     );
   }
-
+  
   if (msg.text && msg.text.startsWith("/")) return;
-
-  // ===== MEDIA HANDLING =====
+  
+  // Media handling
   const hasMedia =
     msg.photo || msg.video || msg.document || msg.animation ||
     msg.video_note || msg.voice || msg.audio;
-
+  
   if (!hasMedia) return;
-
+  
+  // Processing message
+  const processingMsg = await ctx.reply("🌍 Mixing languages... 🎲");
+  
+  // Get random caption
+  const randomCaption = getRandomCaption();
+  const captionStyle = getCaptionStyle(randomCaption);
+  
+  // Build final caption
   const caption = buildFinalCaption(msg.caption || "", msg);
-
+  
+  // Send to channels
   let sent = 0, failed = 0;
+  
   for (const ch of TARGET_CHANNELS) {
     try {
       await ctx.telegram.copyMessage(ch, msg.chat.id, msg.message_id, {
@@ -168,13 +446,22 @@ bot.on("message", async (ctx) => {
         parse_mode: "HTML",
       });
       sent++;
-    } catch {
+      await new Promise(resolve => setTimeout(resolve, 300));
+    } catch (error) {
+      console.error(`Failed to send to channel ${ch}:`, error);
       failed++;
     }
   }
-
+  
+  // Delete processing message
+  await ctx.telegram.deleteMessage(msg.chat.id, processingMsg.message_id).catch(() => {});
+  
+  // Show success with style info
   await ctx.reply(
-    `<b>✅ Dispatch Complete</b>\n\nSent: ${sent}\nFailed: ${failed}`,
+    `✅ <b>Sent to ${sent} channels</b>\n\n` +
+    `<b>Style:</b> ${captionStyle}\n` +
+    `<b>Caption:</b> ${randomCaption.split('\n')[0]}...\n\n` +
+    `🔄 Next SS gets DIFFERENT language!`,
     { parse_mode: "HTML" }
   );
 });
@@ -186,7 +473,7 @@ module.exports = async (req, res) => {
       await bot.handleUpdate(req.body);
       return res.status(200).json({ ok: true });
     }
-    res.status(200).send("VENOM MEDIA DISPATCHER ACTIVE");
+    res.status(200).send("🌍 VENOM MULTI-LANGUAGE DISPATCHER ACTIVE");
   } catch (e) {
     console.error(e);
     res.status(500).send("Internal Error");
