@@ -67,190 +67,190 @@ const FORWARD_NAMES = [
 
 // ----------------------- ENGLISH (PURE) ------------------------
 const ENGLISH = [
-  "Been using 2 months, still safe ✅\n@VenomDevX",
+  "Been using 2 months, still safe ✅\n",
   
-  "15 kills first game 🔥\nThanks @VenomDevX",
+  "15 kills first game 🔥\nThanks ",
   
-  "0.8 to 4.5 KD in 1 month 🚀\nDM @VenomDevX",
+  "0.8 to 4.5 KD in 1 month 🚀\nDM ",
   
-  "No ban since 3 months 🐉\n@VenomDevX legit",
+  "No ban since 3 months 🐉\n legit",
   
-  "Smooth aimbot, no recoil 🎯\nHit @VenomDevX",
+  "Smooth aimbot, no recoil 🎯\nHit ",
   
-  "Worth every penny 💰\n@VenomDevX",
+  "Worth every penny 💰\n",
   
-  "My duo thinks I'm pro now 🤫\n@VenomDevX",
+  "My duo thinks I'm pro now 🤫\n",
   
-  "Free cheats = ban in 24hrs\nVenom = safe 💪\n@VenomDevX",
+  "Free cheats = ban in 24hrs\nVenom = safe 💪\n",
   
-  "20 bomb dropped 💣\n@VenomDevX",
+  "20 bomb dropped 💣\n",
   
-  "Best decision ever ✅\n@VenomDevX"
+  "Best decision ever ✅\n"
 ];
 
 // ----------------------- HINGLISH (HINDI + ENGLISH) ------------------------
 const HINGLISH = [
-  "Bhai solid kaam kar raha 🔥\n@VenomDevX",
+  "Bhai solid kaam kar raha 🔥\n",
   
-  "10 match khele, 10 MVP 🏆\nThanks @VenomDevX",
+  "10 match khele, 10 MVP 🏆\nThanks ",
   
-  "Pehle dar lagta tha ab maza aa raha 😎\n@VenomDevX",
+  "Pehle dar lagta tha ab maza aa raha 😎\n",
   
-  "Dosto ne pucha kese pro hua?\nBola @VenomDevX ne kar diya 🤫",
+  "Dosto ne pucha kese pro hua?\nBola  ne kar diya 🤫",
   
-  "Free wale try kare the, ban ho gaya\n@VenomDevX se 2 mahine safe ✅",
+  "Free wale try kare the, ban ho gaya\n se 2 mahine safe ✅",
   
-  "Kal 18 kills, sab bola hacker\nMaine kaha haan proud hu 😂\n@VenomDevX",
+  "Kal 18 kills, sab bola hacker\nMaine kaha haan proud hu 😂\n",
   
-  "Setup in 2 minutes, kaam shuru ⚡\n@VenomDevX bhai",
+  "Setup in 2 minutes, kaam shuru ⚡\n bhai",
   
-  "Ghar walo ko pata nahi mai hacker hu 🤫\n@VenomDevX",
+  "Ghar walo ko pata nahi mai hacker hu 🤫\n",
   
-  "Streamer ki 15-0 pitti kar di 😂\n@VenomDevX OP",
+  "Streamer ki 15-0 pitti kar di 😂\n OP",
   
-  "Jab se yeh use kiya, game badal gaya 🔥\n@VenomDevX",
+  "Jab se yeh use kiya, game badal gaya 🔥\n",
   
-  "Ek baar try kar, phir pachtayega 🤷‍♂️\n@VenomDevX",
+  "Ek baar try kar, phir pachtayega 🤷‍♂️\n",
   
-  "2 saal bronze tha, 1 hafte mein diamond 🚀\n@VenomDevX",
+  "2 saal bronze tha, 1 hafte mein diamond 🚀\n",
   
-  "Baki sab timepass, yeh asli hai 💯\n@VenomDevX",
+  "Baki sab timepass, yeh asli hai 💯\n",
   
-  "Package le liya bhai, maza aa gaya 😍\n@VenomDevX"
+  "Package le liya bhai, maza aa gaya 😍\n"
 ];
 
 // ----------------------- TANGLISH (TAMIL + ENGLISH) ------------------------
 const TANGLISH = [
-  "Sema level da 🔥\n@VenomDevX thaan king 👑",
+  "Sema level da 🔥\n thaan king 👑",
   
-  "15 kills first game la 🎯\nThanks @VenomDevX mapla",
+  "15 kills first game la 🎯\nThanks  mapla",
   
-  "Namba pro uh 😎\n@VenomDevX valiya",
+  "Namba pro uh 😎\n valiya",
   
-  "En duo ku theriyaadhu na hack uh 🤫\n@VenomDevX dhaan",
+  "En duo ku theriyaadhu na hack uh 🤫\n dhaan",
   
-  "Free try pannen, ban uh\nVenom la 2 months safe uh 💪\n@VenomDevX",
+  "Free try pannen, ban uh\nVenom la 2 months safe uh 💪\n",
   
-  "Aimbot semma smooth uh 🧈\n@VenomDevX",
+  "Aimbot semma smooth uh 🧈\n",
   
-  "Nerla iruntha silver uh\nIppa diamond uh 🚀\n@VenomDevX thanks",
+  "Nerla iruntha silver uh\nIppa diamond uh 🚀\n thanks",
   
-  "Enemies crying in chat 😭\n@VenomDevX OP",
+  "Enemies crying in chat 😭\n OP",
   
-  "Config worked first try uh 🔧\n@VenomDevX",
+  "Config worked first try uh 🔧\n",
   
-  "Low end phone la lag eh illa 📱\n@VenomDevX recommended",
+  "Low end phone la lag eh illa 📱\n recommended",
   
-  "Vera level da ivaru 🔥\n@VenomDevX thaan maamaan",
+  "Vera level da ivaru 🔥\n thaan maamaan",
   
-  "Oru vaati try pannu, aprom theriyum 💯\n@VenomDevX",
+  "Oru vaati try pannu, aprom theriyum 💯\n",
   
-  "Main ID safe uh 2 months uh 🛡️\n@VenomDevX",
+  "Main ID safe uh 2 months uh 🛡️\n",
   
-  "Paid uh worth uh da 💰\n@VenomDevX",
+  "Paid uh worth uh da 💰\n",
   
-  "Nambikkai vai, trust uh 🤝\n@VenomDevX"
+  "Nambikkai vai, trust uh 🤝\n"
 ];
 
 // ----------------------- DAKHNI/URDU MIX ------------------------
 const DAKHNI = [
-  "Yaar kamaal kar diya 🔥\n@VenomDevX bhai",
+  "Yaar kamaal kar diya 🔥\n bhai",
   
-  "15 kills first match mein 🎯\nShukriya @VenomDevX",
+  "15 kills first match mein 🎯\nShukriya ",
   
-  "Pehle dar lagta tha, ab maza aa raha hai 😎\n@VenomDevX",
+  "Pehle dar lagta tha, ab maza aa raha hai 😎\n",
   
-  "Dosto ne pucha kaise pro hua?\nKaha @VenomDevX ne kar diya 🤫",
+  "Dosto ne pucha kaise pro hua?\nKaha  ne kar diya 🤫",
   
-  "Free wale try kiye the, ban ho gaya\nVenom se 2 mahine safe hoon ✅\n@VenomDevX",
+  "Free wale try kiye the, ban ho gaya\nVenom se 2 mahine safe hoon ✅\n",
   
-  "Kal 18 kills, sab bola hacker\nMain kaha haan proud hoon 😂\n@VenomDevX",
+  "Kal 18 kills, sab bola hacker\nMain kaha haan proud hoon 😂\n",
   
-  "Setup 2 minute mein, kaam shuru ⚡\n@VenomDevX bhai",
+  "Setup 2 minute mein, kaam shuru ⚡\n bhai",
   
-  "Ghar walon ko nahi pata main hacker hoon 🤫\n@VenomDevX",
+  "Ghar walon ko nahi pata main hacker hoon 🤫\n",
   
-  "Streamer ki 15-0 pitti kar di 😂\n@VenomDevX OP",
+  "Streamer ki 15-0 pitti kar di 😂\n OP",
   
-  "Jab se yeh use kiya, game badal gaya 🔥\n@VenomDevX",
+  "Jab se yeh use kiya, game badal gaya 🔥\n",
   
-  "Ek baar try kar ke dekh, pachtayega nahi 💯\n@VenomDevX",
+  "Ek baar try kar ke dekh, pachtayega nahi 💯\n",
   
-  "2 saal bronze tha, 1 hafte mein diamond 🚀\n@VenomDevX",
+  "2 saal bronze tha, 1 hafte mein diamond 🚀\n",
   
-  "Bakiyan timepass, yeh asli hai 💯\n@VenomDevX"
+  "Bakiyan timepass, yeh asli hai 💯\n"
 ];
 
 // ----------------------- MANGALISH (MALAYALAM + ENGLISH) ------------------------
 const MANGALISH = [
-  "Sugam ayittundu 🔥\n@VenomDevX",
+  "Sugam ayittundu 🔥\n",
   
-  "15 kills first game il 🎯\nThanks @VenomDevX",
+  "15 kills first game il 🎯\nThanks ",
   
-  "En friends think I'm pro now 😎\n@VenomDevX",
+  "En friends think I'm pro now 😎\n",
   
-  "Free cheats try cheythu, ban ayi\nVenom 2 months safe 💪\n@VenomDevX",
+  "Free cheats try cheythu, ban ayi\nVenom 2 months safe 💪\n",
   
-  "Aimbot smooth ayittundu 🧈\n@VenomDevX",
+  "Aimbot smooth ayittundu 🧈\n",
   
-  "Enemies crying in chat 😭\n@VenomDevX OP",
+  "Enemies crying in chat 😭\n OP",
   
-  "Config first try il work ayi 🔧\n@VenomDevX",
+  "Config first try il work ayi 🔧\n",
   
-  "Low end phone il lag illa 📱\n@VenomDevX recommended",
+  "Low end phone il lag illa 📱\n recommended",
   
-  "Vere level annu 🔥\n@VenomDevX",
+  "Vere level annu 🔥\n",
   
-  "Onnu try cheyy, pinne theriyum 💯\n@VenomDevX"
+  "Onnu try cheyy, pinne theriyum 💯\n"
 ];
 
 // ----------------------- TELUGLISH (TELUGU + ENGLISH) ------------------------
 const TELUGLISH = [
-  "Super ga undi 🔥\n@VenomDevX",
+  "Super ga undi 🔥\n",
   
-  "15 kills first game lo 🎯\nThanks @VenomDevX",
+  "15 kills first game lo 🎯\nThanks ",
   
-  "Na friends think I'm pro now 😎\n@VenomDevX",
+  "Na friends think I'm pro now 😎\n",
   
-  "Free cheats try chesa, ban aindi\nVenom 2 months safe 💪\n@VenomDevX",
+  "Free cheats try chesa, ban aindi\nVenom 2 months safe 💪\n",
   
-  "Aimbot smooth ga undi 🧈\n@VenomDevX",
+  "Aimbot smooth ga undi 🧈\n",
   
-  "Enemies crying in chat 😭\n@VenomDevX OP",
+  "Enemies crying in chat 😭\n OP",
   
-  "Config first try lo work aindi 🔧\n@VenomDevX",
+  "Config first try lo work aindi 🔧\n",
   
-  "Low end phone lo lag ledu 📱\n@VenomDevX recommended",
+  "Low end phone lo lag ledu 📱\n recommended",
   
-  "Vere level 🔥\n@VenomDevX",
+  "Vere level 🔥\n",
   
-  "Okasari try chey, tarvata thelustadi 💯\n@VenomDevX"
+  "Okasari try chey, tarvata thelustadi 💯\n"
 ];
 
 // ----------------------- ULTRA SHORT (ALL LANGUAGES MIX) ------------------------
 const ULTRA_SHORT = [
-  "OP AF 🔥 @VenomDevX",
-  "Legit seller ✅ @VenomDevX",
-  "Safe for main 🛡️ @VenomDevX",
-  "Best in game 🐉 @VenomDevX",
-  "No ban since dec 🗓️ @VenomDevX",
-  "Aimbot smooth 🧈 @VenomDevX",
-  "Hit reg crazy 🎯 @VenomDevX",
-  "Worth it 💰 @VenomDevX",
-  "Trusted 🤝 @VenomDevX",
-  "Game changer 🔥 @VenomDevX",
-  "Villain arc 😈 @VenomDevX",
-  "EZ wins 🏆 @VenomDevX",
-  "Pro ban gaya 😎 @VenomDevX",
-  "No skill needed 🎮 @VenomDevX",
-  "Domination mode 💀 @VenomDevX",
-  "Sema level 🔥 @VenomDevX",
-  "Vera level 🔥 @VenomDevX",
-  "Super undi 🔥 @VenomDevX",
-  "Kamaal hai 🔥 @VenomDevX",
-  "Solid hai 🔥 @VenomDevX",
-  "Dhansu 🔥 @VenomDevX",
-  "Rocks 🔥 @VenomDevX"
+  "OP AF 🔥 ",
+  "Legit seller ✅ ",
+  "Safe for main 🛡️ ",
+  "Best in game 🐉 ",
+  "No ban since dec 🗓️ ",
+  "Aimbot smooth 🧈 ",
+  "Hit reg crazy 🎯 ",
+  "Worth it 💰 ",
+  "Trusted 🤝 ",
+  "Game changer 🔥 ",
+  "Villain arc 😈 ",
+  "EZ wins 🏆 ",
+  "Pro ban gaya 😎 ",
+  "No skill needed 🎮 ",
+  "Domination mode 💀 ",
+  "Sema level 🔥 ",
+  "Vera level 🔥 ",
+  "Super undi 🔥 ",
+  "Kamaal hai 🔥 ",
+  "Solid hai 🔥 ",
+  "Dhansu 🔥 ",
+  "Rocks 🔥 "
 ];
 
 // ----------------------- COMBO (ALL TOGETHER) ------------------------
@@ -518,3 +518,4 @@ module.exports = async (req, res) => {
     res.status(500).send("Internal Error");
   }
 };
+
