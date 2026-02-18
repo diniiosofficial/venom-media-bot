@@ -21,6 +21,50 @@ const TARGET_CHANNELS = [
   -1003203628581  // 𝐕𝐄𝐍𝐎𝐌 𝐒𝐄𝐑𝐕𝐄𝐑™
 ];
 
+// ----------------------- RANDOM FORWARD NAMES ------------------------
+const FORWARD_NAMES = [
+    "Aarush Rathore",
+    "Vihaan Reddy",
+    "Devansh Kulkarni",
+    "Ritvik Chauhan",
+    "Adhrit Bansal",
+    "Ivaan Pillai",
+    "Kairav Sengar",
+    "Shaurya Bhadra",
+    "Atharv Naidu",
+    "Rudransh Shekhawat",
+    "Tanishq Solanki",
+    "Vivaan Rawat",
+    "Arhaat Chatterjee",
+    "Lakshya Dangi",
+    "Kriday Bhonsle",
+    "Vedant Kamat",
+    "Prayan Saxena",
+    "Abeer Bhattacharya",
+    "Darshil Kothari",
+    "Nirvaan Hegde",
+    "Arinjay Borkar",
+    "Yugantar Patil",
+    "Satyansh Tripathi",
+    "Harvith Gill",
+    "Akhilesh Panicker",
+    "Ronav Chettiar",
+    "Samarjeet Debnath",
+    "Ishvak Raut",
+    "Shaunak Jadhav",
+    "Advaith Gounder",
+    "Rithesh Moorthy",
+    "Prithvith Ramesh",
+    "Aarjit Thakur",
+    "Shivansh Barua",
+    "Devith Narayanan",
+    "Nakul Banerjee",
+    "Yuvan Purohit",
+    "Arnav Khandelwal",
+    "Rudraksh Mahajan",
+    "Kanishk Ghosh"
+];
+
 // ----------------------- ENGLISH (PURE) ------------------------
 const ENGLISH = [
   "Been using 2 months, still safe ✅\n@VenomDevX",
@@ -251,6 +295,12 @@ function getRandomCaption() {
   return SHUFFLED_CAPTIONS[randomIndex];
 }
 
+// Get random forward name
+function getRandomForwardName() {
+  const randomIndex = Math.floor(Math.random() * FORWARD_NAMES.length);
+  return FORWARD_NAMES[randomIndex];
+}
+
 // Get language style for preview
 function getCaptionStyle(caption) {
   if (TANGLISH.includes(caption)) return "🎯 Tanglish";
@@ -262,27 +312,11 @@ function getCaptionStyle(caption) {
   return "🇬🇧 English";
 }
 
-// Get forward info
-function getForwardInfo(msg) {
+// Get forward info with random name
+function getForwardInfo() {
   try {
-    if (msg.forward_from) {
-      const u = msg.forward_from;
-      const name = [u.first_name, u.last_name].filter(Boolean).join(" ");
-      if (name) {
-        return `<b>📨 via</b> ${escapeHtml(name)}`;
-      }
-    }
-    
-    if (msg.forward_from_chat) {
-      const ch = msg.forward_from_chat;
-      if (ch.title) {
-        return `<b>📨 via</b> ${escapeHtml(ch.title)}`;
-      }
-    }
-    
-    if (msg.forward_sender_name) {
-      return `<b>📨 via</b> ${escapeHtml(msg.forward_sender_name)}`;
-    }
+    const randomName = getRandomForwardName();
+    return `<b>📨 Forwarded from</b> ${escapeHtml(randomName)}`;
   } catch (e) {
     console.log("[WARN] getForwardInfo error:", e);
   }
@@ -290,7 +324,7 @@ function getForwardInfo(msg) {
 }
 
 // Build final caption
-function buildFinalCaption(userCaption, msg) {
+function buildFinalCaption(userCaption) {
   const parts = [];
   
   if (userCaption && userCaption.trim().length > 0) {
@@ -299,7 +333,7 @@ function buildFinalCaption(userCaption, msg) {
     parts.push(getRandomCaption());
   }
   
-  const forwardInfo = getForwardInfo(msg);
+  const forwardInfo = getForwardInfo();
   if (forwardInfo) {
     parts.push(forwardInfo);
   }
@@ -328,14 +362,16 @@ bot.start(async (ctx) => {
     "<b>📸 HOW IT WORKS:</b>\n" +
     "1️⃣ Upload screenshot\n" +
     "2️⃣ Bot adds RANDOM language style\n" +
-    "3️⃣ Auto-shares to ALL channels\n\n" +
+    "3️⃣ Auto-shares to ALL channels\n" +
+    "4️⃣ Shows as FORWARDED from random name\n\n" +
     "<b>Commands:</b>\n" +
     "📤 /broadcast - Text to all channels\n" +
     "📊 /stats - Show caption stats\n" +
     "🔄 /shuffle - Reshuffle captions\n\n" +
     `<b>Total Captions:</b> ${ALL_CAPTIONS.length}\n` +
     `<b>Languages:</b> ${totalStyles}\n` +
-    `<b>Channels:</b> ${TARGET_CHANNELS.length}\n\n` +
+    `<b>Channels:</b> ${TARGET_CHANNELS.length}\n` +
+    `<b>Forward Names:</b> ${FORWARD_NAMES.length}\n\n` +
     "<b>Admin Only</b> - India ka apna bot! 🚀",
     { parse_mode: "HTML" }
   );
@@ -348,7 +384,8 @@ bot.command("stats", async (ctx) => {
   await ctx.reply(
     `<b>📊 VENOM BOT STATS</b>\n\n` +
     `<b>Total Captions:</b> ${ALL_CAPTIONS.length}\n` +
-    `<b>Shuffled Pool:</b> ${SHUFFLED_CAPTIONS.length}\n\n` +
+    `<b>Shuffled Pool:</b> ${SHUFFLED_CAPTIONS.length}\n` +
+    `<b>Forward Names:</b> ${FORWARD_NAMES.length}\n\n` +
     `<b>🌏 LANGUAGE BREAKDOWN:</b>\n` +
     `🇬🇧 English: ${ENGLISH.length}\n` +
     `🇮🇳 Hinglish: ${HINGLISH.length}\n` +
@@ -433,8 +470,8 @@ bot.on("message", async (ctx) => {
   const randomCaption = getRandomCaption();
   const captionStyle = getCaptionStyle(randomCaption);
   
-  // Build final caption
-  const caption = buildFinalCaption(msg.caption || "", msg);
+  // Build final caption with random forward name
+  const caption = buildFinalCaption(msg.caption || "");
   
   // Send to channels
   let sent = 0, failed = 0;
@@ -457,11 +494,13 @@ bot.on("message", async (ctx) => {
   await ctx.telegram.deleteMessage(msg.chat.id, processingMsg.message_id).catch(() => {});
   
   // Show success with style info
+  const randomForwardName = getRandomForwardName();
   await ctx.reply(
     `✅ <b>Sent to ${sent} channels</b>\n\n` +
     `<b>Style:</b> ${captionStyle}\n` +
+    `<b>Forwarded as:</b> ${escapeHtml(randomForwardName)}\n` +
     `<b>Caption:</b> ${randomCaption.split('\n')[0]}...\n\n` +
-    `🔄 Next SS gets DIFFERENT language!`,
+    `🔄 Next SS gets DIFFERENT language & forward name!`,
     { parse_mode: "HTML" }
   );
 });
@@ -473,7 +512,7 @@ module.exports = async (req, res) => {
       await bot.handleUpdate(req.body);
       return res.status(200).json({ ok: true });
     }
-    res.status(200).send("🌍 VENOM MULTI-LANGUAGE DISPATCHER ACTIVE");
+    res.status(200).send("🌍 VENOM MULTI-LANGUAGE DISPATCHER WITH RANDOM FORWARD NAMES ACTIVE");
   } catch (e) {
     console.error(e);
     res.status(500).send("Internal Error");
